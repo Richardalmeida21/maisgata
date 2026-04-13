@@ -140,15 +140,6 @@
     {% include "snipplets/product/product-variants.tpl" with {show_size_guide: show_size_guide} %}
   {% endif %}
 
-  {% if not product.available %}
-    <p class="mb-2">Caso o produto esteja esgotado (cor, tamanho) faça uma encomenda via WHATSAPP</p>
-    <a
-      class="btn-encomendar"
-      href="https://wa.me/19992455113?text=Oii%2C%20gostaria%20de%20fazer%20uma%20encomenda%20de%20um%20produto.%0AVou%20mandar%20um%20print%20do%20look%20%F0%9F%93%B2%E2%AC%87%EF%B8%8F"
-      >Encomendar</a
-    >
-  {% endif %}
-
   {% if settings.last_product and show_product_quantity %}
     <div
       class="{% if product.variations %}js-last-product {% endif %}text-accent font-weight-bold mb-4"
@@ -183,6 +174,19 @@
       {# Fake add to cart CTA visible during add to cart event #}
 
       {% include 'snipplets/placeholders/button-placeholder.tpl' with {custom_class: "mb-4"} %}
+    </div>
+
+    {# Availability messages #}
+    <div class="col-12 js-availability-messages mt-n1 mb-2">
+      <p class="js-msg-available font-small" {% if state != 'cart' or product.selected_or_first_available_variant.stock == 1 %}style="display: none;"{% endif %}>
+        Este look está disponível! Toque no botão comprar.
+      </p>
+      <p class="js-msg-last-piece font-small text-accent font-weight-bold" {% if state != 'cart' or product.selected_or_first_available_variant.stock != 1 %}style="display: none;"{% endif %}>
+        Ultima peça disponível! Toque no botão comprar.
+      </p>
+      <p class="js-msg-nostock font-small" {% if state != 'nostock' %}style="display: none;"{% endif %}>
+        Este look esgotou mas temos outros similares aqui no site!
+      </p>
     </div>
 
     {% if settings.ajax_cart %}

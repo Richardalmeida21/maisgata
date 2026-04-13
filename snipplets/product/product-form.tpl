@@ -126,13 +126,19 @@
             {% include 'snipplets/placeholders/button-placeholder.tpl' with {custom_class: "mb-4"} %}
 
         </div>
-        
-        {% if state == 'nostock' %}
-          <div class="col-12" id="whatsapp-order-container">
-            <p class="mb-2">Esta variação (Cor e Tamanho) está esgotada, faça uma encomenda clicando no botão abaixo</p>
-            <a class="btn-encomendar" onclick="openWhatsApp(this); return false;" href="javascript:void(0)" data-phone="5519992455113">Encomendar</a>
-          </div>
-        {% endif %}
+
+        {# Availability messages #}
+        <div class="col-12 js-availability-messages mt-n1 mb-2">
+            <p class="js-msg-available font-small" {% if state != 'cart' or product.selected_or_first_available_variant.stock == 1 %}style="display: none;"{% endif %}>
+                Este look está disponível! Toque no botão comprar.
+            </p>
+            <p class="js-msg-last-piece font-small text-accent font-weight-bold" {% if state != 'cart' or product.selected_or_first_available_variant.stock != 1 %}style="display: none;"{% endif %}>
+                Ultima peça disponível! Toque no botão comprar.
+            </p>
+            <p class="js-msg-nostock font-small" {% if state != 'nostock' %}style="display: none;"{% endif %}>
+                Este look esgotou mas temos outros similares aqui no site!
+            </p>
+        </div>
 
         {% if settings.ajax_cart %}
             <div class="col-12">

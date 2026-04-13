@@ -125,11 +125,20 @@
 
             {% include 'snipplets/placeholders/button-placeholder.tpl' with {custom_class: "mb-4"} %}
 
-            {% if not product.available %}
-                <p class="mb-2">Caso o produto esteja esgotado (cor, tamanho) faça uma encomenda via WHATSAPP</p>
-                <a class="btn-encomendar" href="https://wa.me/19992455113">Encomendar</a>
-            {% endif %}
 
+        </div>
+
+        {# Availability messages #}
+        <div class="col-12 js-availability-messages mt-n1 mb-2">
+            <p class="js-msg-available font-small" {% if state != 'cart' or product.selected_or_first_available_variant.stock == 1 %}style="display: none;"{% endif %}>
+                Este look está disponível! Toque no botão comprar.
+            </p>
+            <p class="js-msg-last-piece font-small text-accent font-weight-bold" {% if state != 'cart' or product.selected_or_first_available_variant.stock != 1 %}style="display: none;"{% endif %}>
+                Ultima peça disponível! Toque no botão comprar.
+            </p>
+            <p class="js-msg-nostock font-small" {% if state != 'nostock' %}style="display: none;"{% endif %}>
+                Este look esgotou mas temos outros similares aqui no site!
+            </p>
         </div>
 
         {% if settings.ajax_cart %}

@@ -2355,6 +2355,26 @@ DOMContentLoaded.addEventOrExecute(() => {
             }
         {% endif %}
 
+        {# Availability messages #}
+        var $msgAvailable = parent.find('.js-msg-available');
+        var $msgLastPiece = parent.find('.js-msg-last-piece');
+        var $msgNoStock = parent.find('.js-msg-nostock');
+        if ($msgAvailable.length || $msgLastPiece.length || $msgNoStock.length) {
+            if (!variant.available) {
+                $msgAvailable.hide();
+                $msgLastPiece.hide();
+                $msgNoStock.show();
+            } else if (variant.stock == 1) {
+                $msgAvailable.hide();
+                $msgLastPiece.show();
+                $msgNoStock.hide();
+            } else {
+                $msgAvailable.show();
+                $msgLastPiece.hide();
+                $msgNoStock.hide();
+            }
+        }
+
         {# Update shipping on variant change #}
 
         LS.updateShippingProduct();
