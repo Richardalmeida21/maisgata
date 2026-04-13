@@ -10,13 +10,14 @@ jobs:
       - name: Checkout do repo
         uses: actions/checkout@v3
 
-      - name: Baixar arquivos da Nuvemshop
-        uses: airbnb/ftp-sync-action@v1.0.3
-        with:
-          host: ftp.nuvemshop.com.br
-          user: ${{ secrets.FTP_USER }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          options: "--verbose"
+      - name: Baixar arquivos via LFTP
+        env:
+          FTP_HOST: "ftp.nuvemshop.com.br"
+          FTP_USER: ${{ secrets.FTP_USER }}
+          FTP_PASS: ${{ secrets.FTP_PASSWORD }}
+        run: |
+          sudo apt-get update && sudo apt-get install -y lftp
+          lftp -c "set ftp:ssl-allow yes; set ssl:verify-certificate no; open -u $FTP_USER,$FTP_PASS $FTP_HOST; mirror --verbose / ."
 
       - name: Commitar arquivos no GitHub
         run: |
