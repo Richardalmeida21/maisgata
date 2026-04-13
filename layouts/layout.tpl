@@ -153,6 +153,75 @@
             });
         </script>
 
+        {# Availability messages handler for product variants #}
+        {% if template == 'product' %}
+        <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            function updateAvailabilityMessages() {
+                var addToCartBtn = document.querySelector('.js-addtocart');
+                var isNoStock = addToCartBtn && (addToCartBtn.disabled || addToCartBtn.classList.contains('nostock'));
+                
+                var msgAvailable = document.querySelector('.js-msg-available');
+                var msgLastPiece = document.querySelector('.js-msg-last-piece');
+                var msgNoStock = document.querySelector('.js-msg-nostock');
+                
+                if (!msgAvailable || !msgLastPiece || !msgNoStock) return;
+                
+                // Pega estoque do elemento visível
+                var stockEl = document.querySelector('.js-product-stock');
+                var stock = stockEl ? parseInt(stockEl.textContent.trim()) || 0 : 0;
+                
+                if (isNoStock) {
+                    // Esgotado
+                    msgAvailable.style.display = 'none';
+                    msgLastPiece.style.display = 'none';
+                    msgNoStock.style.display = 'block';
+                } else if (stock === 1) {
+                    // Última peça
+                    msgAvailable.style.display = 'none';
+                    msgLastPiece.style.display = 'block';
+                    msgNoStock.style.display = 'none';
+                } else {
+                    // Disponível
+                    msgAvailable.style.display = 'block';
+                    msgLastPiece.style.display = 'none';
+                    msgNoStock.style.display = 'none';
+                }
+            }
+            
+            // Atualiza no carregamento
+            updateAvailabilityMessages();
+            
+            // Observa mudanças no botão de compra (atributo disabled e classes)
+            var addToCartBtn = document.querySelector('.js-addtocart');
+            if (addToCartBtn) {
+                var observer = new MutationObserver(updateAvailabilityMessages);
+                observer.observe(addToCartBtn, { attributes: true, attributeFilter: ['disabled', 'class', 'value'] });
+            }
+            
+            // Observa mudanças no texto de estoque
+            var stockEl = document.querySelector('.js-product-stock');
+            if (stockEl) {
+                var stockObserver = new MutationObserver(updateAvailabilityMessages);
+                stockObserver.observe(stockEl, { childList: true, characterData: true, subtree: true });
+            }
+            
+            // Backup: atualiza quando muda a variação (click no select ou bullet)
+            document.addEventListener('change', function(e) {
+                if (e.target && e.target.classList.contains('js-variation-option')) {
+                    setTimeout(updateAvailabilityMessages, 150);
+                }
+            });
+            
+            document.addEventListener('click', function(e) {
+                if (e.target && (e.target.classList.contains('js-insta-variant') || e.target.closest('.js-insta-variant'))) {
+                    setTimeout(updateAvailabilityMessages, 150);
+                }
+            });
+        });
+        </script>
+        {% endif %}
+
         {# Google reCAPTCHA on register page #}
 
         {% if template == 'account.register' %}
@@ -180,22 +249,6 @@
                 });
             </script>
         {% endif %}
-
-        {% include "static/js/google-survey.js.tpl" %}
-        
-        {# WhatsApp customizado para produtos sem estoque #}
-        <script src="{{ 'js/whatsapp-order-v2.js' | static_url }}"></script>
-
-        {# Store external codes added from admin #}
-
-        {% if store.assorted_js %}
-            <script>
-                LS.ready.then(function() {
-                    var trackingCode = jQueryNuvem.parseHTML('{{ store.assorted_js| escape("js") }}', document, true);
-                    jQueryNuvem('body').append(trackingCode);
-                });
-            </script>
-        {% endif %}        
 
     </body>
 </html>

@@ -2182,6 +2182,7 @@ DOMContentLoaded.addEventOrExecute(() => {
 	{# Updates price, installments, labels and CTA on variant change #}
 
 	function changeVariant(variant) {
+        console.log('DEBUG: changeVariant called with variant=', variant);
         jQueryNuvem(".js-product-detail .js-shipping-calculator-response").hide();
         jQueryNuvem("#shipping-variant-id").val(variant.id);
 

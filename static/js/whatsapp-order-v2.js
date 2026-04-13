@@ -91,11 +91,43 @@ document.addEventListener("DOMContentLoaded", function() {
     // Função para verificar status de estoque
     function checkStockStatus() {
         var addToCartBtn = document.querySelector('.js-addtocart');
-        if (addToCartBtn && addToCartBtn.classList.contains('nostock')) {
-            // Esconde o botão original
-            var originalContainer = document.getElementById('whatsapp-order-container');
-            if (originalContainer) originalContainer.style.display = "none";
-            
+        var isNoStock = addToCartBtn && addToCartBtn.classList.contains('nostock');
+        
+        // Atualiza mensagens de disponibilidade
+        var msgAvailable = document.querySelector('.js-msg-available');
+        var msgLastPiece = document.querySelector('.js-msg-last-piece');
+        var msgNoStock = document.querySelector('.js-msg-nostock');
+        
+        // Pega o estoque da variante atual (do atributo data ou do texto visível)
+        var stockElement = document.querySelector('.js-product-stock');
+        var stock = stockElement ? parseInt(stockElement.textContent) : 0;
+        
+        console.log('whatsapp-v2: isNoStock=', isNoStock, 'stock=', stock);
+        
+        if (msgAvailable && msgLastPiece && msgNoStock) {
+            if (isNoStock) {
+                // Esgotado
+                msgAvailable.style.display = 'none';
+                msgLastPiece.style.display = 'none';
+                msgNoStock.style.display = 'block';
+            } else if (stock === 1) {
+                // Última peça
+                msgAvailable.style.display = 'none';
+                msgLastPiece.style.display = 'block';
+                msgNoStock.style.display = 'none';
+            } else {
+                // Disponível
+                msgAvailable.style.display = 'block';
+                msgLastPiece.style.display = 'none';
+                msgNoStock.style.display = 'none';
+            }
+        }
+        
+        // Esconde o botão original
+        var originalContainer = document.getElementById('whatsapp-order-container');
+        if (originalContainer) originalContainer.style.display = "none";
+        
+        if (isNoStock) {
             // Mostra o botão dinâmico
             whatsappDynamicContainer.style.display = "block";
         } else {
