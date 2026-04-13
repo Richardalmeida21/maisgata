@@ -2355,6 +2355,13 @@ DOMContentLoaded.addEventOrExecute(() => {
             }
         {% endif %}
 
+        {# Update hidden stock element for JS access #}
+        var $variantStock = parent.find('.js-variant-stock');
+        if ($variantStock.length) {
+            $variantStock.attr('data-stock', variant.stock);
+            $variantStock.attr('data-available', variant.available ? 'true' : 'false');
+        }
+
         {# Availability messages #}
         var $msgAvailable = parent.find('.js-msg-available');
         var $msgLastPiece = parent.find('.js-msg-last-piece');

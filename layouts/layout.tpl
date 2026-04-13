@@ -167,9 +167,9 @@
                 
                 if (!msgAvailable || !msgLastPiece || !msgNoStock) return;
                 
-                // Pega estoque do elemento visível
-                var stockEl = document.querySelector('.js-product-stock');
-                var stock = stockEl ? parseInt(stockEl.textContent.trim()) || 0 : 0;
+                // Pega estoque do elemento escondido
+                var stockEl = document.querySelector('.js-variant-stock');
+                var stock = stockEl ? parseInt(stockEl.getAttribute('data-stock')) || 0 : 0;
                 
                 if (isNoStock) {
                     // Esgotado
@@ -199,11 +199,11 @@
                 observer.observe(addToCartBtn, { attributes: true, attributeFilter: ['disabled', 'class', 'value'] });
             }
             
-            // Observa mudanças no texto de estoque
-            var stockEl = document.querySelector('.js-product-stock');
+            // Observa mudanças no elemento de estoque escondido
+            var stockEl = document.querySelector('.js-variant-stock');
             if (stockEl) {
                 var stockObserver = new MutationObserver(updateAvailabilityMessages);
-                stockObserver.observe(stockEl, { childList: true, characterData: true, subtree: true });
+                stockObserver.observe(stockEl, { attributes: true, attributeFilter: ['data-stock'] });
             }
             
             // Backup: atualiza quando muda a variação (click no select ou bullet)

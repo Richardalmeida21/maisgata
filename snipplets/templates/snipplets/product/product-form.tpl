@@ -128,15 +128,18 @@
 
         </div>
 
+        {# Hidden stock value for JS access #}
+        <div class="js-variant-stock d-none" data-stock="{{ product.selected_or_first_available_variant.stock }}" data-available="{{ product.selected_or_first_available_variant.available ? 'true' : 'false' }}"></div>
+
         {# Availability messages #}
         <div class="col-12 js-availability-messages mt-n1 mb-2">
-            <p class="js-msg-available font-small" {% if state != 'cart' or product.selected_or_first_available_variant.stock == 1 %}style="display: none;"{% endif %}>
+            <p class="js-msg-available font-weight-bold mb-2" {% if state != 'cart' or product.selected_or_first_available_variant.stock == 1 %}style="display: none;"{% endif %}>
                 Este look está disponível! Toque no botão comprar.
             </p>
-            <p class="js-msg-last-piece font-small text-accent font-weight-bold" {% if state != 'cart' or product.selected_or_first_available_variant.stock != 1 %}style="display: none;"{% endif %}>
-                Ultima peça disponível! Toque no botão comprar.
+            <p class="js-msg-last-piece h6 text-accent font-weight-bold mb-2" {% if state != 'cart' or product.selected_or_first_available_variant.stock != 1 %}style="display: none;"{% endif %}>
+                Última peça disponível! Toque no botão comprar.
             </p>
-            <p class="js-msg-nostock font-small" {% if state != 'nostock' %}style="display: none;"{% endif %}>
+            <p class="js-msg-nostock font-weight-bold mb-2" {% if state != 'nostock' %}style="display: none;"{% endif %}>
                 Este look esgotou mas temos outros similares aqui no site!
             </p>
         </div>
