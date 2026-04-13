@@ -1,0 +1,29 @@
+name: Captura Inicial do FTP
+
+on:
+  workflow_dispatch: # Botão para rodar manualmente
+
+jobs:
+  get-files:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout do repo
+        uses: actions/checkout@v3
+
+      - name: Baixar arquivos da Nuvemshop
+        uses: SebRollen/ftp-action@v2.0.0
+        with:
+          host: ftp.nuvemshop.com.br
+          user: ${{ secrets.FTP_USER }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          localDir: '.'
+          remoteDir: '/'
+          options: "--verbose"
+
+      - name: Commitar arquivos no GitHub
+        run: |
+          git config --global user.name "Richard Almeida"
+          git config --global user.email "richard.almeida@exemplo.com"
+          git add .
+          git commit -m "Captura inicial de arquivos via FTP" || echo "Sem mudanças para commitar"
+          git push
