@@ -1,0 +1,24 @@
+name: Deploy para Nuvemshop
+
+on:
+  push:
+    branches:
+      - main  # Toda vez que você fizer push na branch main, ele envia
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout do repo
+        uses: actions/checkout@v3
+
+      - name: Enviar arquivos via LFTP
+        env:
+          FTP_HOST: "ftp.nuvemshop.com.br"
+          FTP_USER: ${{ secrets.FTP_USER }}
+          FTP_PASS: ${{ secrets.FTP_PASSWORD }}
+        run: |
+          sudo apt-get update && sudo apt-get install -y lftp
+          # O comando 'mirror -R' faz o upload reverso (Local -> Remoto)
+          # O --reverse garante que o Git mande para o FTP
+          lftp -c "set ftp:ssl-allow yes; set ssl:verify-certificate no; open -u $FTP_USER,$FTP_PASS $FTP_HOST; mirror --reverse --verbose . /"
