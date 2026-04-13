@@ -2359,16 +2359,21 @@ DOMContentLoaded.addEventOrExecute(() => {
         var $msgAvailable = parent.find('.js-msg-available');
         var $msgLastPiece = parent.find('.js-msg-last-piece');
         var $msgNoStock = parent.find('.js-msg-nostock');
+        console.log('DEBUG: parent=', parent, 'variant.available=', variant.available, 'variant.stock=', variant.stock);
+        console.log('DEBUG: found elements:', $msgAvailable.length, $msgLastPiece.length, $msgNoStock.length);
         if ($msgAvailable.length || $msgLastPiece.length || $msgNoStock.length) {
             if (!variant.available) {
+                console.log('DEBUG: showing nostock');
                 $msgAvailable.hide();
                 $msgLastPiece.hide();
                 $msgNoStock.show();
             } else if (variant.stock == 1) {
+                console.log('DEBUG: showing last piece');
                 $msgAvailable.hide();
                 $msgLastPiece.show();
                 $msgNoStock.hide();
             } else {
+                console.log('DEBUG: showing available');
                 $msgAvailable.show();
                 $msgLastPiece.hide();
                 $msgNoStock.hide();
